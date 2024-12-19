@@ -2,7 +2,7 @@ import { Router } from 'express';
 
 const router = Router();
 
-// Base de datos de ejemplo (puedes conectarla a tu base de datos en el futuro)
+// Base de datos de ejemplo
 let products = [
   { id: 1, title: "Manzanas", description: "Fruta fresca", code: "A001", price: 50, status: true, stock: 100, category: "Frutas", thumbnails: [] },
   { id: 2, title: "Leche", description: "Leche entera", code: "L002", price: 120, status: true, stock: 200, category: "Lácteos", thumbnails: [] },
@@ -11,22 +11,18 @@ let products = [
 ];
 
 // Ruta raíz GET /
-// Lista todos los productos, con soporte para ?limit
 router.get('/', (req, res) => {
   const { limit } = req.query;
 
-  // Si se especifica el límite, devolver sólo esa cantidad de productos
   if (limit) {
     const limitedProducts = products.slice(0, parseInt(limit, 10));
     return res.status(200).json(limitedProducts);
   }
 
-  // Si no hay límite, devolver todos los productos
   res.status(200).json(products);
 });
 
 // Ruta GET /:pid
-// Trae sólo el producto con el id proporcionado
 router.get('/:pid', (req, res) => {
   const productId = parseInt(req.params.pid, 10);
 
@@ -50,7 +46,8 @@ router.post('/', (req, res) => {
     return res.status(400).json({ error: 'All fields are required except thumbnails' });
   }
 
-  // Generar un ID único (tomamos el último id y sumamos 1)
+  // Generar un ID únic
+
   const newId = products.length ? products[products.length - 1].id + 1 : 1;
 
   // Crear el nuevo producto
@@ -60,11 +57,10 @@ router.post('/', (req, res) => {
     description,
     code,
     price,
-    status: true, // Por defecto status es true
+    status: true, 
     stock,
     category,
-    thumbnails: thumbnails || [] // Si no se proporciona thumbnails, se pone como array vacío
-  };
+    thumbnails: thumbnails || [] 
 
   // Agregar el nuevo producto a la base de datos
   products.push(newProduct);
@@ -95,7 +91,7 @@ router.put('/:pid', (req, res) => {
     price,
     stock,
     category,
-    thumbnails: thumbnails || products[productIndex].thumbnails // No sobreescribir thumbnails si no se envían
+    thumbnails: thumbnails || products[productIndex].thumbnails 
   };
 
   res.status(200).json(products[productIndex]);
